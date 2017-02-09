@@ -42,7 +42,6 @@ GEM
     argon2 (1.1.1)
       ffi (~> 1.9)
       ffi-compiler (~> 0.1)
-    bcrypt (3.1.11)
     builder (3.2.3)
     byebug (9.0.6)
     concurrent-ruby (1.0.4)
@@ -130,7 +129,6 @@ PLATFORMS
 
 DEPENDENCIES
   argon2 (~> 1.1, >= 1.1.1)
-  bcrypt (~> 3.1.7)
   byebug
   hkdf (~> 0.3.0)
   listen (~> 3.0.5)

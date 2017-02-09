@@ -1,6 +1,11 @@
 class ApplicationController < ActionController::API
+    require 'hmac_signature_auth'
     protected
         def auth
-            #render json: request.headers['Authorization'], status: 400
+            if HMACSignatureAuth.new.authenticate(request) == false
+                return render :status => :unauthorized
+            end
+
+            return true
         end
 end
