@@ -26,14 +26,32 @@ class Token
         return false
     end
 
-    def find(access_token)
+    def self.find(access_token)
         redis = Redis.new(:host => '127.0.0.1', :port => 6379, :db => 0)
-         return redis.get("access_token:" + access_token).json_create
+        data = redis.get("access_token:" + access_token)
+        if data == nil
+            return nil
+        end
+
+        data = JSON.parse(data)
+        return Token.new(
+            user_id: data['data'][0],
+            ikm: data['data'][1],
+            salt: data['data'][2],
+            access_token: data['data'][3],
+            refresh_token: data['data'][4],
+            expires_at: data['data'][5]
+        )
     end
 
     def save
         redis = Redis.new(:host => '127.0.0.1', :port => 6379, :db => 0)
         return redis.set("access_token:" + self.access_token, self.to_json)
+    end
+
+    def delete
+        redis = Redis.new(:host => '127.0.0.1', :port => 6379, :db => 0)
+        return redis.del("access_token:" + self.access_token)
     end
 
     def isExpired

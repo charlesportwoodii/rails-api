@@ -2,7 +2,7 @@ class UserController < ApplicationController
   require 'securerandom'
 
   # Require authentication on all actions except for the authenticate method
-  before_action :auth, except: [ 'user#authenticate', 'user#register' ]
+  before_action :auth, only: [ 'refresh' ]
 
   # Super simple authentication with Argon2i hash
   def authenticate
@@ -22,7 +22,18 @@ class UserController < ApplicationController
   end
 
   def refresh
-    
+    oldToken = Token.find(@@access_token)
+    newToken = Token.generate(@@user.id)
+
+    oldToken.delete()
+
+    return render json: {
+        'ikm' => newToken.ikm,
+        'salt' => newToken.salt,
+        'access_token' => newToken.access_token,
+        'refresh_token' => newToken.refresh_token,
+        'expires_at' => newToken.expires_at
+      }, status: 200
   end
 
   # Trivial registration with a given username, email. and password
